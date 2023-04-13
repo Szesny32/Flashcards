@@ -21,6 +21,7 @@ export class FlipCardComponent implements OnInit {
 
   getFlashcard(){
     this.service.getFlashcard().subscribe(flashcard => this.flashcard = flashcard);
+    this.isFlipped = false;
   }
 
   getSafeHtml(text: string): SafeHtml {
