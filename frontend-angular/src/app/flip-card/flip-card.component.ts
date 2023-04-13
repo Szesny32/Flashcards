@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FlashcardData } from '../data-model/flashcard-data';
 import { FlashcardDataServiceService } from '../flashcard-data-service.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-flip-card',
@@ -9,7 +10,7 @@ import { FlashcardDataServiceService } from '../flashcard-data-service.service';
 })
 export class FlipCardComponent implements OnInit {
 
-  constructor(private service: FlashcardDataServiceService) { }
+  constructor(private service: FlashcardDataServiceService, private sanitizer: DomSanitizer) { }
   
   ngOnInit(): void {
   }
@@ -22,5 +23,8 @@ export class FlipCardComponent implements OnInit {
     this.service.getFlashcard().subscribe(flashcard => this.flashcard = flashcard);
   }
 
+  getSafeHtml(text: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(text);
+  }
 
 }

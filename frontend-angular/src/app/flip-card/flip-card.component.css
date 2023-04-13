@@ -1,8 +1,9 @@
 .flip-card {
     position: relative;
-    width: 200px;
-    height: 100px;
+    width: 400px;
+    height: 200px;
     perspective: 1000px;
+    white-space: pre-line;
   }
   
   .flip-card-inner {
