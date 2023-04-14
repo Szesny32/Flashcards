@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('flashcards', function (Blueprint $table) {
+        Schema::create('category_dictionaries', function (Blueprint $table) {
             $table->id();
             $table->string('category', 256);
-            $table->string('question', 256);
-            $table->string('answer', 256);
+            $table->unsignedBigInteger('category_group_id');
+            $table->foreign('category_group_id')->references('id')->on('category_dictionaries');
+
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('flashcards');
+        Schema::dropIfExists('category_dictionaries');
     }
 };

@@ -10,8 +10,18 @@ class Flashcard extends Model
     use HasFactory;
     public $timestamps = false;
     protected $fillable = [
-        'category',
+        'main_category_id',
+        'sub_category_id',
         'question',
-        'answer'
+        'question_type_id',
+        'question_image',
+        'answer',
+        'answer_type_id',
+        'answer_image'
+    ];
+
+    protected $casts = [
+        'question_image' => 'binary',
+        'answer_image' => 'binary'
     ];
 }
