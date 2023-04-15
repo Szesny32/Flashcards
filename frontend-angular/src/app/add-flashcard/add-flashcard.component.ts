@@ -1,30 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FlashcardData} from '../data-model/flashcard-data';
+import { NewFlashcardData} from '../data-model/new-flashcard-data';
 import { Category} from '../data-model/category';
 import { DataFormatType} from '../data-model/data-format-type';
 import { FlashcardDataServiceService } from '../flashcard-data-service.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
+
 @Component({
-  selector: 'app-flip-card',
-  templateUrl: './flip-card.component.html',
-  styleUrls: ['./flip-card.component.css']
+  selector: 'app-add-flashcard',
+  templateUrl: './add-flashcard.component.html',
+  styleUrls: ['./add-flashcard.component.css']
 })
-export class FlipCardComponent implements OnInit {
+export class AddFlashcardComponent implements OnInit {
 
   flashcardForm!: FormGroup;
   categories: Category[] = [];
   dataFormatTypes: DataFormatType[] = [];
 
   isFlipped = false;
-  flashcard: FlashcardData = {    
-    id: -1,
+  flashcard: NewFlashcardData = {    
     category_id: -1,
-    question: "unknown",
+    question: "Pytanie",
     question_type_id: -1,
     question_image: null,
-    answer: "unknown",
+    answer: "Odpowiedź",
     answer_type_id: -1,
     answer_image: null
   };
@@ -33,21 +33,28 @@ export class FlipCardComponent implements OnInit {
   answerImageUrl: any;
   questionImageUrl: any;
 
+
+
+
   constructor(
       private formBuilder: FormBuilder, 
       private service: FlashcardDataServiceService, 
-      private sanitizer: DomSanitizer) { }
-  
+      private sanitizer: DomSanitizer) {this.createForm();}
+
+      createForm() {
+        this.flashcardForm = this.formBuilder.group({
+        category: ['', Validators.required],
+        question: ['', Validators.required],
+        questionType: ['', Validators.required],
+
+        answer: ['', Validators.required],
+        answerType: ['', Validators.required],
+
+        });
+        }
+
+
   ngOnInit(): void {
-    this.flashcardForm = this.formBuilder.group({
-      category: ['', Validators.required],
-      question: ['', Validators.required],
-      questionType: ['', Validators.required],
-      questionImage: [''],
-      answer: ['', Validators.required],
-      answerType: ['', Validators.required],
-      answerImage: ['']
-    });
 
     this.service.getCategories().subscribe((response: any) => {
       this.categories = response.categories;
@@ -57,38 +64,40 @@ export class FlipCardComponent implements OnInit {
       this.dataFormatTypes = response.dataFormats;
     });
 
+    console.log(this.categories);
+    console.log(this.dataFormatTypes);
   }
   
- 
+  onSubmit() {
+    console.log("Category: ", this.flashcardForm.value.category_id);
+    console.log("Category2: ", this.flashcard.category_id);
 
+    if (this.flashcardForm.invalid) {
+      console.log("Form is invalid");
+      this.flashcardForm.markAllAsTouched(); // mark all fields as touched to show validation errors
 
-  async getFlashcard() {
-    console.log("getFlashcard");
-    this.service.getFlashcard().subscribe(async flashcard => {
-      this.flashcard = flashcard;
-      this.isFlipped = false;
-      // Pobranie zdjęcia z serwera
-      if (this.flashcard && this.flashcard.question_image) {
-        const imageBlob = await firstValueFrom(this.service.getImage(this.flashcard.question_image));
-        if (imageBlob instanceof Blob) {
-          this.imageBlobUrl = URL.createObjectURL(imageBlob);
-          this.questionImageUrl = this.sanitizer.bypassSecurityTrustUrl(this.imageBlobUrl);
-        }
-      } else {
-        this.questionImageUrl = null;
-      }
-      if (this.flashcard && this.flashcard.answer_image) {
-        const imageBlob2 = await firstValueFrom(this.service.getImage(this.flashcard.answer_image));
-        if (imageBlob2 instanceof Blob) {
-          this.imageBlob2Url = URL.createObjectURL(imageBlob2);
-          this.answerImageUrl = this.sanitizer.bypassSecurityTrustUrl(this.imageBlob2Url);
-        }
-      } else {
-        this.answerImageUrl = null;
-      }
+      return;
+    }
+    console.log("Form is valid");
+    const flashcard: NewFlashcardData = { 
+      category_id: this.flashcardForm.controls['category'].value,
+      question: this.flashcardForm.controls['question'].value,
+      question_type_id: this.flashcardForm.controls['questionType'].value,
+      question_image: this.flashcard.question_image,
+      answer: this.flashcardForm.controls['answer'].value,
+      answer_type_id: this.flashcardForm.controls['answerType'].value,
+      answer_image: this.flashcard.answer_image,
+    };
+  
+    this.service.addFlashcard(flashcard).subscribe((response) => {
+     console.log(response);
     });
   }
   
+  
+
+
+
   
   getSafeHtml(text: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(text);
@@ -104,14 +113,13 @@ export class FlipCardComponent implements OnInit {
   }
   
   
-
-
   onQuestionImageSelected(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.flashcardForm.patchValue({
         questionImage: file
       });
+      this.flashcard.question_image = file;
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
@@ -126,13 +134,16 @@ export class FlipCardComponent implements OnInit {
       this.flashcardForm.patchValue({
         answerImage: file
       });
+      this.flashcard.answer_image = file;
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
+        
         this.answerImageUrl = reader.result;
       };
     }
   }
+  
 
 
 }

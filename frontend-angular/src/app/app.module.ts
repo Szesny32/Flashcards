@@ -8,11 +8,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { FlipCardComponent } from './flip-card/flip-card.component';
+import { AddFlashcardComponent } from './add-flashcard/add-flashcard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FlipCardComponent
+    FlipCardComponent,
+    AddFlashcardComponent
   ],
   imports: [
     BrowserModule,
