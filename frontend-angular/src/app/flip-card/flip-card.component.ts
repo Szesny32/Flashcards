@@ -17,6 +17,7 @@ export class FlipCardComponent implements OnInit {
   categories: Category[] = [];
   dataFormatTypes: DataFormatType[] = [];
 
+  category: number = -1;
   isFlipped = false;
   flashcard: FlashcardData = {    
     id: -1,
@@ -50,7 +51,10 @@ export class FlipCardComponent implements OnInit {
     });
 
     this.service.getCategories().subscribe((response: any) => {
-      this.categories = response.categories;
+      this.categories = response.categories; 
+      if(this.categories && this.categories[0].id){
+        this.category = this.categories[0].id;
+      }
     });
     
     this.service.getDataFormatTypes().subscribe((response: any) => {
@@ -63,30 +67,33 @@ export class FlipCardComponent implements OnInit {
 
 
   async getFlashcard() {
-    console.log("getFlashcard");
-    this.service.getFlashcard().subscribe(async flashcard => {
-      this.flashcard = flashcard;
-      this.isFlipped = false;
-      // Pobranie zdjęcia z serwera
-      if (this.flashcard && this.flashcard.question_image) {
-        const imageBlob = await firstValueFrom(this.service.getImage(this.flashcard.question_image));
-        if (imageBlob instanceof Blob) {
-          this.imageBlobUrl = URL.createObjectURL(imageBlob);
-          this.questionImageUrl = this.sanitizer.bypassSecurityTrustUrl(this.imageBlobUrl);
+
+    if(this.category > 0){
+      console.log(`getFlashcard/${this.category}`);
+      this.service.getFlashcard(this.category).subscribe(async flashcard => {
+        this.flashcard = flashcard;
+        this.isFlipped = false;
+        // Pobranie zdjęcia z serwera
+        if (this.flashcard && this.flashcard.question_image) {
+          const imageBlob = await firstValueFrom(this.service.getImage(this.flashcard.question_image));
+          if (imageBlob instanceof Blob) {
+            this.imageBlobUrl = URL.createObjectURL(imageBlob);
+            this.questionImageUrl = this.sanitizer.bypassSecurityTrustUrl(this.imageBlobUrl);
+          }
+        } else {
+          this.questionImageUrl = null;
         }
-      } else {
-        this.questionImageUrl = null;
-      }
-      if (this.flashcard && this.flashcard.answer_image) {
-        const imageBlob2 = await firstValueFrom(this.service.getImage(this.flashcard.answer_image));
-        if (imageBlob2 instanceof Blob) {
-          this.imageBlob2Url = URL.createObjectURL(imageBlob2);
-          this.answerImageUrl = this.sanitizer.bypassSecurityTrustUrl(this.imageBlob2Url);
+        if (this.flashcard && this.flashcard.answer_image) {
+          const imageBlob2 = await firstValueFrom(this.service.getImage(this.flashcard.answer_image));
+          if (imageBlob2 instanceof Blob) {
+            this.imageBlob2Url = URL.createObjectURL(imageBlob2);
+            this.answerImageUrl = this.sanitizer.bypassSecurityTrustUrl(this.imageBlob2Url);
+          }
+        } else {
+          this.answerImageUrl = null;
         }
-      } else {
-        this.answerImageUrl = null;
-      }
-    });
+      });
+    }
   }
   
   

@@ -13,11 +13,11 @@ export class FlashcardDataServiceService {
   constructor(private http: HttpClient) { }
   readonly ROOT_URL = 'http://localhost:8000/api';
 
-  getFlashcard(){
+  getFlashcard(category: number){
     let headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
     const requestOptions = { headers: headers};
-    return this.http.get<FlashcardData>(this.ROOT_URL + '/getFlashcard', requestOptions);
+    return this.http.get<FlashcardData>(`${this.ROOT_URL}/getFlashcard/${category}`, requestOptions);
 
   }
 

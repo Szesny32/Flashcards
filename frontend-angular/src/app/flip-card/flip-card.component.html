@@ -1,12 +1,23 @@
+<div *ngIf="flashcard">
 {{ flashcard.id }} | {{flashcard.category_id}} | {{ getCategoryName(flashcard.category_id) }} | {{ flashcard.question_image }} | {{ flashcard.answer_image }}
 | {{flashcard.question_image}} | {{flashcard.answer_image}}
+</div>
+
+<div class="form-group">
+  <label for="category">Category:</label>
+  <select name="category" class="form-control" [(ngModel)]="category" [required]="true">
+    <option *ngFor="let category of categories" [value]="category.id">{{ category.category }}</option>
+  </select>
+</div>
+
 <div class="flip-card" [class.flipped]="isFlipped" (click)="isFlipped = !isFlipped">
     <div class="flip-card-inner">
-      <div class="flip-card-front">
+      <div  *ngIf="flashcard" class="flip-card-front">
+
         <h2>{{flashcard.question}}</h2>
         <img [src]="questionImageUrl" alt="Obrazek" />
       </div>
-      <div class="flip-card-back">
+      <div *ngIf="flashcard" class="flip-card-back">
         <h2>{{flashcard.answer}}</h2>
         <img [src]="answerImageUrl" alt="Obrazek" />
       </div>

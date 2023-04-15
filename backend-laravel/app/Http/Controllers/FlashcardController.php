@@ -14,16 +14,18 @@ use Carbon\Carbon;
 
 class FlashcardController extends Controller
 {
-    public function getFlashcard(){
+    public function getFlashcard($category){
 
         $flashcard = Flashcard::select('id', 'question', 'question_type_id', 'question_image', 'answer', 'answer_type_id', 'answer_image', 'category_id')
+        ->where('category_id', $category)
         ->inRandomOrder()
         ->first();
+
+
         return $flashcard;
     }
 
     public function addFlashcard(Request $request) {
-       
 
         $request->validate([
             'category_id' => 'required|numeric',

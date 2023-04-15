@@ -15,8 +15,8 @@
     <div class="form-group">
       <label for="category">Category:</label>
       <select formControlName="category" name="category" class="form-control" [(ngModel)]="flashcard.category_id" [required]="true">
-        <option *ngFor="let category of categories" [value]="category.id">{{ category.category }}</option>
-      </select>
+        <option *ngFor="let category of categories; let first = first" [value]="category.id" [selected]="first">{{ category.category }}</option>
+      </select>      
     </div>
     <div class="form-group">
       <label for="question">Question:</label>

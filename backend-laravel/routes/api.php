@@ -14,7 +14,7 @@ use App\Http\Controllers\FlashcardController;
 |
 */
 
-Route::get('/getFlashcard', [FlashcardController::class, 'getFlashcard']);
+Route::get('/getFlashcard/{category}', [FlashcardController::class, 'getFlashcard']);
 Route::post('/addFlashcard', [FlashcardController::class, 'addFlashcard']);
 Route::get('/getImage/{id}', [FlashcardController::class, 'getImage']);
 

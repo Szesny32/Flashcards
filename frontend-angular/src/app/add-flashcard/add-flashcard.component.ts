@@ -17,7 +17,6 @@ export class AddFlashcardComponent implements OnInit {
   flashcardForm!: FormGroup;
   categories: Category[] = [];
   dataFormatTypes: DataFormatType[] = [];
-
   isFlipped = false;
   flashcard: NewFlashcardData = {    
     category_id: -1,
@@ -58,10 +57,17 @@ export class AddFlashcardComponent implements OnInit {
 
     this.service.getCategories().subscribe((response: any) => {
       this.categories = response.categories;
+      if(this.categories && this.categories[0].id){
+        this.flashcard.category_id = this.categories[0].id;
+      }
     });
     
     this.service.getDataFormatTypes().subscribe((response: any) => {
       this.dataFormatTypes = response.dataFormats;
+      if(this.dataFormatTypes && this.dataFormatTypes[0].id){
+        this.flashcard.question_type_id = this.dataFormatTypes[0].id;
+        this.flashcard.answer_type_id = this.dataFormatTypes[0].id;
+      }
     });
 
     console.log(this.categories);
@@ -90,6 +96,8 @@ export class AddFlashcardComponent implements OnInit {
     };
   
     this.service.addFlashcard(flashcard).subscribe((response) => {
+      this.flashcard.answer_image = null;
+      this.flashcard.question_image = null;
      console.log(response);
     });
   }
