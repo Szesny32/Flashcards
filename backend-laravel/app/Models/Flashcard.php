@@ -20,8 +20,5 @@ class Flashcard extends Model
         'answer_image'
     ];
 
-    protected $casts = [
-        'question_image' => 'binary',
-        'answer_image' => 'binary'
-    ];
+ 
 }

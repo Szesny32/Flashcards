@@ -23,12 +23,16 @@ return new class extends Migration
             $table->string('question', 256)->nullable();
             $table->unsignedBigInteger('question_type_id');
             $table->foreign('question_type_id')->references('id')->on('data_format_types');
-            $table->binary('question-image')->nullable();
+
+            $table->unsignedBigInteger('question_image')->nullable();
+            $table->foreign('question_image')->references('id')->on('images');
 
             $table->string('answer', 256)->nullable();
             $table->unsignedBigInteger('answer_type_id');
             $table->foreign('answer_type_id')->references('id')->on('data_format_types');
-            $table->binary('answer-image')->nullable();
+            
+            $table->unsignedBigInteger('answer_image')->nullable();
+            $table->foreign('answer_image')->references('id')->on('images');
 
         });
     }

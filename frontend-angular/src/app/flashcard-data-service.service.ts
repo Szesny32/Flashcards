@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { FlashcardData } from './data-model/flashcard-data';
+import { Observable } from 'rxjs/internal/Observable';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,5 +16,9 @@ export class FlashcardDataServiceService {
     const requestOptions = { headers: headers};
     return this.http.get<FlashcardData>(this.ROOT_URL + '/getFlashcard', requestOptions);
 
+  }
+
+  getImage(id: number) {
+    return this.http.get(`${this.ROOT_URL}/getImage/${id}`, { responseType: 'blob' });
   }
 }

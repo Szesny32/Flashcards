@@ -1,12 +1,16 @@
-{{flashcard.id}} | {{flashcard.category}}
+{{flashcard.id}} | {{flashcard.main_category_id}} | {{flashcard.sub_category_id}}
+| {{flashcard.question_image}} | {{flashcard.answer_image}}
 <div class="flip-card" [ngClass]="{ 'flipped': isFlipped }" (click)="isFlipped = !isFlipped">
     <div class="flip-card-inner">
       <div class="flip-card-front">
         <h2>{{flashcard.question}}</h2>
+        <img [src]="questionImageUrl" alt="Obrazek" />
       </div>
       <div class="flip-card-back">
         <h2>{{flashcard.answer}}</h2>
+        <img [src]="answerImageUrl" alt="Obrazek" />
       </div>
     </div>
   </div>
   <button (click)="getFlashcard()">Losuj fiszkę</button>
+
