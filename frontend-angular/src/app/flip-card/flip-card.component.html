@@ -1,4 +1,4 @@
-{{flashcard.id}} | {{flashcard.main_category_id}} | {{flashcard.sub_category_id}}
+{{ flashcard.id }} | {{flashcard.category_id}} | {{ getCategoryName(flashcard.category_id) }} | {{ flashcard.question_image }} | {{ flashcard.answer_image }}
 | {{flashcard.question_image}} | {{flashcard.answer_image}}
 <div class="flip-card" [ngClass]="{ 'flipped': isFlipped }" (click)="isFlipped = !isFlipped">
     <div class="flip-card-inner">
@@ -14,3 +14,45 @@
   </div>
   <button (click)="getFlashcard()">Losuj fiszkę</button>
 
+
+
+
+  <form (ngSubmit)="onSubmit()" #flashcardForm="ngForm">
+    <div class="form-group">
+      <label for="category">Category:</label>
+      <select name="category" class="form-control" [(ngModel)]="flashcard.category_id" required>
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.category }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="question">Question:</label>
+      <input type="text" name="question" class="form-control" [(ngModel)]="flashcard.question" required>
+    </div>
+    <div class="form-group">
+      <label for="questionType">Question type:</label>
+      <select name="questionType" class="form-control" [(ngModel)]="flashcard.question_type_id" required>
+        <option *ngFor="let questionType of dataFormatTypes" [value]="questionType.id">{{ questionType.data_type }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="questionImage">Question image:</label>
+      <input type="file" name="questionImage" id="questionImage" (change)="onQuestionImageSelected($event)">
+      <label class="custom-file-upload" for="questionImage">Select file</label>
+    </div>
+    <div class="form-group">
+      <label for="answer">Answer:</label>
+      <input type="text" name="answer" class="form-control" [(ngModel)]="flashcard.answer" required>
+    </div>
+    <div class="form-group">
+      <label for="answerType">Answer type:</label>
+      <select name="answerType" class="form-control" [(ngModel)]="flashcard.answer_type_id" required>
+        <option *ngFor="let answerType of dataFormatTypes" [value]="answerType.id">{{ answerType.data_type }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="answerImage">Answer image:</label>
+      <input type="file" name="answerImage" id="answerImage" (change)="onAnswerImageSelected($event)">
+      <label class="custom-file-upload" for="answerImage">Select file</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Flashcard</button>
+  </form>

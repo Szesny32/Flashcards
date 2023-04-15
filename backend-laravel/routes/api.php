@@ -15,7 +15,12 @@ use App\Http\Controllers\FlashcardController;
 */
 
 Route::get('/getFlashcard', [FlashcardController::class, 'getFlashcard']);
+Route::post('/addFlashcard', [FlashcardController::class, 'addFlashcard']);
 Route::get('/getImage/{id}', [FlashcardController::class, 'getImage']);
+
+Route::get('/getCategories', [FlashcardController::class, 'getCategories']);
+Route::get('/getDataFormatTypes', [FlashcardController::class, 'getDataFormats']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
