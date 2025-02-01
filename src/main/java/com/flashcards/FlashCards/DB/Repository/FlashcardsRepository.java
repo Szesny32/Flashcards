@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Optional;
 
 @Getter @Setter
@@ -27,8 +28,9 @@ public class FlashcardsRepository {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public String save(Flashcard flashcard){
-        Category category = categoryRepository.save(flashcard.getCategoryName());
+    public String save(Flashcard flashcard, String path){
+        Optional<Category> optCategory = categoryRepository.findByName(flashcard.getCategoryName());
+        Category category = optCategory.orElseGet(() -> categoryRepository.save(flashcard.getCategoryName(), path));
 
         String sql = "INSERT INTO FLASHCARD(fc_cat_id, fc_question, fc_answer) values (:category_id, :question, :answer)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -72,6 +74,24 @@ public class FlashcardsRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<Flashcard> findByCategory(String path){
+        String sql = "SELECT fc_id, cat_name, fc_question, fc_answer "
+        +"FROM FLASHCARD JOIN CATEGORY ON fc_cat_id = cat_id "
+        +"WHERE cat_id in ( SELECT DISTINCT cat_id FROM CATEGORY WHERE cat_path LIKE :cat_path )";
+
+        SqlParameterSource namedParameters = new MapSqlParameterSource("cat_path", path+'%');
+        RowMapper<Flashcard> mapper = (ResultSet rs, int rowNum) -> {
+            Flashcard flashcard = new Flashcard();
+            flashcard.setId(rs.getInt("fc_id"));
+            flashcard.setCategoryName(rs.getString("cat_name"));
+            flashcard.setQuestion(rs.getString("fc_question"));
+            flashcard.setAnswer(rs.getString("fc_answer"));
+            return flashcard;
+        };
+        return paramTemplate.query(sql, namedParameters, mapper);
+
     }
 
 
