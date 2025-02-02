@@ -6,6 +6,7 @@ import com.flashcards.FlashCards.DB.Repository.CategoryRepository;
 import com.flashcards.FlashCards.DB.Repository.FlashcardsRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,11 @@ public class DebugAPI {
 
     @PostConstruct
     public void init() {
+        refreshCategories();
+    }
+
+    @Scheduled(fixedRate = 10000)
+    public void refreshCategories() {
         this.categories = categoryRepository.getAll();
     }
 
@@ -70,8 +76,12 @@ public class DebugAPI {
     public String AddFlashcard(@ModelAttribute("flashcard") Flashcard flashcard){
         String index = navMenu("/");
 
-        if(!flashcard.getCategoryName().isEmpty() && !flashcard.getQuestion().isEmpty() && !flashcard.getAnswer().isEmpty())
+        if(!flashcard.getCategoryName().isEmpty() && !flashcard.getQuestion().isEmpty() && !flashcard.getAnswer().isEmpty()){
             flashcardAPI.AddFlashcard(flashcard);
+            flashcard.setQuestion("");
+            flashcard.setAnswer("");
+        }
+
 
         index +="<form action='/addFlashcard' method='post'>";
         index += "<table border=1 cellpadding=10>";

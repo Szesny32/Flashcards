@@ -1,15 +1,12 @@
 package com.flashcards.FlashCards.RestAPI;
 
-import com.flashcards.FlashCards.DB.Model.Category;
 import com.flashcards.FlashCards.DB.Model.Flashcard;
-import com.flashcards.FlashCards.DB.Repository.CategoryRepository;
 import com.flashcards.FlashCards.DB.Repository.FlashcardsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.security.Principal;
 import java.util.*;
 
 @RestController
