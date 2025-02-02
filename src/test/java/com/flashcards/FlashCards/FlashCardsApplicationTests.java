@@ -2,12 +2,9 @@ package com.flashcards.FlashCards;
 
 import com.flashcards.FlashCards.DB.Model.Category;
 import com.flashcards.FlashCards.DB.Repository.CategoryRepository;
-import com.flashcards.FlashCards.DB.Repository.FlashcardsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,5 +22,4 @@ class FlashCardsApplicationTests {
         assertTrue(optCategory.isPresent());
 		assertEquals(searchedCategory, optCategory.get().getName());
 	}
-
 }

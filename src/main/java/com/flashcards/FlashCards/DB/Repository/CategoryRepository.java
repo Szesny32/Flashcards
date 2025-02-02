@@ -1,7 +1,6 @@
 package com.flashcards.FlashCards.DB.Repository;
 
 import com.flashcards.FlashCards.DB.Model.Category;
-import com.flashcards.FlashCards.DB.Model.Flashcard;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,8 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
-@Getter @Setter
+@Getter
+@Setter
 @Repository
 public class CategoryRepository {
     @Autowired
@@ -26,7 +26,7 @@ public class CategoryRepository {
     @Autowired
     JdbcTemplate template;
 
-    public Category save(String categoryName, String path){
+    public Category save(String categoryName, String path) {
 
         String sql = "INSERT INTO CATEGORY(cat_name, cat_path) VALUES (:category_name, :cat_path)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -50,9 +50,9 @@ public class CategoryRepository {
     }
 
 
-    public Optional<Category> findById(int id){
+    public Optional<Category> findById(int id) {
         String sql = "SELECT * FROM CATEGORY WHERE cat_name = :category_id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource("category_id",id);
+        SqlParameterSource namedParameters = new MapSqlParameterSource("category_id", id);
         RowMapper<Category> mapper = (ResultSet rs, int rowNum) -> {
             Category category = new Category();
             category.setId(rs.getInt("cat_id"));
@@ -67,9 +67,9 @@ public class CategoryRepository {
         }
     }
 
-    public Optional<Category> findByName(String categoryName){
+    public Optional<Category> findByName(String categoryName) {
         String sql = "SELECT * FROM CATEGORY WHERE cat_name = :category_name";
-        SqlParameterSource namedParameters = new MapSqlParameterSource("category_name",categoryName);
+        SqlParameterSource namedParameters = new MapSqlParameterSource("category_name", categoryName);
         RowMapper<Category> mapper = (ResultSet rs, int rowNum) -> {
             Category category = new Category();
             category.setId(rs.getInt("cat_id"));
@@ -84,9 +84,9 @@ public class CategoryRepository {
         }
     }
 
-    public List<Category> findAllFamily(String path){
+    public List<Category> findAllFamily(String path) {
         String sql = "SELECT * FROM CATEGORY WHERE cat_path LIKE = :cat_path";
-        SqlParameterSource namedParameters = new MapSqlParameterSource("cat_path",path+'%');
+        SqlParameterSource namedParameters = new MapSqlParameterSource("cat_path", path + '%');
         RowMapper<Category> mapper = (ResultSet rs, int rowNum) -> {
             Category category = new Category();
             category.setId(rs.getInt("cat_id"));
@@ -96,8 +96,6 @@ public class CategoryRepository {
         };
         return paramTemplate.query(sql, namedParameters, mapper);
     }
-
-
 
 
 }
