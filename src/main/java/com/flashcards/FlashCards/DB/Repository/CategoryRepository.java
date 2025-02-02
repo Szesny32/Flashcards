@@ -28,12 +28,11 @@ public class CategoryRepository {
 
     public Category save(String categoryName, String path){
 
-            String sql = "INSERT INTO CATEGORY(cat_name, cat_path) VALUES (:category_name, :cat_path)";
-            SqlParameterSource namedParameters = new MapSqlParameterSource()
-                    .addValue("category_name", categoryName)
-                    .addValue("cat_path", path);
-            paramTemplate.update(sql, namedParameters);
-
+        String sql = "INSERT INTO CATEGORY(cat_name, cat_path) VALUES (:category_name, :cat_path)";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("category_name", categoryName)
+                .addValue("cat_path", path);
+        paramTemplate.update(sql, namedParameters);
         return findByName(categoryName).orElseThrow(() ->
                 new RuntimeException("Failed to retrieve the newly inserted category"));
     }

@@ -28,9 +28,9 @@ public class FlashcardsRepository {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public String save(Flashcard flashcard, String path){
-        Optional<Category> optCategory = categoryRepository.findByName(flashcard.getCategoryName());
-        Category category = optCategory.orElseGet(() -> categoryRepository.save(flashcard.getCategoryName(), path));
+    public boolean save(Flashcard flashcard){
+        Category category = categoryRepository.findByName(flashcard.getCategoryName()).orElseThrow(() ->
+                new RuntimeException("Failed to retrieve the newly inserted category"));
 
         String sql = "INSERT INTO FLASHCARD(fc_cat_id, fc_question, fc_answer) values (:category_id, :question, :answer)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -38,7 +38,16 @@ public class FlashcardsRepository {
                 .addValue("question", flashcard.getQuestion())
                 .addValue("answer", flashcard.getAnswer());
         paramTemplate.update(sql, namedParameters);
-        return "SUCCESS";
+        System.out.println("INSERTED NEW FLASHCARD");
+        return true;
+    }
+
+    public boolean deleteById(int id){
+        String sql = "DELETE FROM FLASHCARD WHERE FC_ID = :fc_id";
+        SqlParameterSource namedParameters = new MapSqlParameterSource("fc_id", id);
+        paramTemplate.update(sql, namedParameters);
+        System.out.println("DELETED FLASHCARD ID: " + id);
+        return true;
     }
 
     public Optional<Flashcard> getRandomFlashcard() {

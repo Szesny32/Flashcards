@@ -5,8 +5,9 @@ import lombok.Setter;
 
 @Getter @Setter
 public class Flashcard {
-    int id;
-    String categoryName;
-    String question;
-    String answer;
+    int id = -1;
+    String categoryName="";
+    String categoryPath="";
+    String question="";
+    String answer="";
 }
