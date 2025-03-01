@@ -24,6 +24,11 @@ public class FlashcardAPI {
         return flashcardsRepository.save(flashcard);
     }
 
+    @PostMapping("/api/updateFlashcard")
+    public boolean UpdateFlashcard(@ModelAttribute("flashcard") Flashcard flashcard) {
+        return flashcardsRepository.update(flashcard);
+    }
+
 
     @GetMapping("/api/flashcard/{id}")
     public Flashcard findById(@PathVariable int id) {

@@ -35,19 +35,21 @@ public class DebugAPI {
     @RequestMapping(value = {"/", "/flashcard"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String dashboard(@RequestParam(value = "category", required = false) String pathCategory) {
 
-        String index = navMenu(pathCategory);
-        index += categoryOptionList(pathCategory);
+        String index;
+
 
         List<Flashcard> flashcards = flashcardAPI.byCategory(pathCategory);
         if (!flashcards.isEmpty()) {
             Random random = new Random();
             int randomIndex = random.nextInt(flashcards.size());
             Flashcard flashcard = flashcards.get(randomIndex);
+            index = navMenu(pathCategory, flashcard.getId());
             index += "Category: " + flashcard.getCategoryName() + "</br>";
             index += "Question: " + flashcard.getQuestion() + "</br>";
             index += "Answer: <a href='/answer/" + flashcard.getId() + "'>[SHOW]</a></br>";
+        } else index = navMenu(pathCategory, -1);
 
-        }
+        index += categoryOptionList(pathCategory);
         return index;
     }
 
@@ -61,7 +63,7 @@ public class DebugAPI {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Category not found for flashcard"));
 
-        String index = navMenu(matchedCategory.getPath());
+        String index = navMenu(matchedCategory.getPath(), id);
         index += categoryOptionList(matchedCategory.getPath());
         index += "Category: " + flashcard.getCategoryName() + "</br>";
         index += "Question: " + flashcard.getQuestion() + "</br>";
@@ -73,14 +75,12 @@ public class DebugAPI {
 
     @RequestMapping(value = "/addFlashcard", method = {RequestMethod.GET, RequestMethod.POST})
     public String AddFlashcard(@ModelAttribute("flashcard") Flashcard flashcard) {
-        String index = navMenu("/");
-
         if (!flashcard.getCategoryName().isEmpty() && !flashcard.getQuestion().isEmpty() && !flashcard.getAnswer().isEmpty()) {
             flashcardAPI.AddFlashcard(flashcard);
             flashcard.setQuestion("");
             flashcard.setAnswer("");
         }
-
+        String index = navMenu("/", flashcard.getId());
 
         index += "<form action='/addFlashcard' method='post'>";
         index += "<table border=1 cellpadding=10>";
@@ -95,7 +95,6 @@ public class DebugAPI {
             }
         }
         index += "</select></th>";
-        //index += "<th><input type='text' id='categoryName' name='categoryName' value=" + flashcard.getCategoryName() + " required></th>";
         index += "</tr>";
 
         index += "<tr>";
@@ -117,9 +116,56 @@ public class DebugAPI {
         return index;
     }
 
+    @RequestMapping(value = "/modifyFlashcard/{flashcardId}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String ModifyFlashcard(@PathVariable int flashcardId, @ModelAttribute("flashcard") Flashcard flashcard) {
+        String index = navMenu("/", flashcardId);
+
+        if (flashcard.getId() == -1) {
+            flashcard = flashcardAPI.findById(flashcardId);
+        } else {
+            flashcardAPI.UpdateFlashcard(flashcard);
+        }
+
+
+
+        index += "<form action='/modifyFlashcard/"+flashcardId+"' method='post'>";
+        index += "<input type='hidden' name='id' value='" + flashcard.getId() + "'>";
+
+        index += "<table border=1 cellpadding=10>";
+        index += "<tr>";
+        index += "<th>Category</th>";
+        index += "<th><select id='categoryName' name='categoryName'>";
+        for (Category category : categories) {
+            if (category.getName().equals(flashcard.getCategoryName())) {
+                index += "<option value='" + category.getName() + "' selected>" + category.getName() + "</option>";
+            } else {
+                index += "<option value='" + category.getName() + "' >" + category.getName() + "</option>";
+            }
+        }
+        index += "</select></th>";
+        index += "</tr>";
+
+        index += "<tr>";
+        index += "<th>Question</th>";
+        index += "<th><input type='text' id='question' name='question' value='" + flashcard.getQuestion() + "' required></th>";
+        index += "</tr>";
+
+        index += "<tr>";
+        index += "<th>Answer</th>";
+        index += "<th><input type='text' id='answer' name='answer' value='" + flashcard.getAnswer() + "' required></th>";
+        index += "</tr>";
+
+        index += "</table>";
+        index += "<input type='submit' value='Modify Flashcard'>";
+        index += "</form>";
+
+
+        return index;
+    }
+
     @GetMapping("/listCategories")
     public String listCategories() {
-        String index = navMenu("/");
+        String index = navMenu("/", -1);
         index += "<table border=1 cellpadding=10>";
         index += "<tr>";
         index += "<th>id</th>";
@@ -143,7 +189,7 @@ public class DebugAPI {
     public String listFlashcards() {
 
         List<Flashcard> flashcards = flashcardAPI.byCategory("/");
-        String index = navMenu("/");
+        String index = navMenu("/", -1);
         index += "<table border=1 cellpadding=10>";
         index += "<tr>";
         index += "<th></th>";
@@ -156,8 +202,12 @@ public class DebugAPI {
         for (Flashcard flashcard : flashcards) {
             index += "<tr>";
             index += "<td><form action='/api/deleteFlashcard/" + flashcard.getId() + "' method='get' >";
-            index += "<button type='submit'>X</button>";
-            index += "</form></td>";
+            index += "<button type='submit'>Delete</button>";
+            index += "</form>";
+            index += "<form action='/modifyFlashcard/" + flashcard.getId() + "' method='get' >";
+            index += "<button type='submit'>Modify</button>";
+            index += "</form>";
+            index += "</td>";
             index += "<td>" + flashcard.getId() + "</td>";
             index += "<td>" + flashcard.getCategoryName() + "</td>";
             index += "<td>" + flashcard.getQuestion() + "</td>";
@@ -189,11 +239,12 @@ public class DebugAPI {
         return index;
     }
 
-    private String navMenu(String path) {
+    private String navMenu(String path, int flashcardId) {
         String index = "<table border=1 cellpadding=10>";
         index += "<tr>";
         index += "<th><a href='/flashcard?category=" + path + "'>FLASHCARD</a></th>";
         index += "<th><a href='/addFlashcard'>ADD FLASHCARD</a></th>";
+        index += "<th><a href='/modifyFlashcard/" + flashcardId + "'>MODIFY FLASHCARD</a></th>";
         index += "<th><a href='/listFlashcards'>LIST FLASHCARDS</a></th>";
         index += "<th><a href='/listCategories'>LIST CATEGORIES</a></th>";
         index += "</tr>";

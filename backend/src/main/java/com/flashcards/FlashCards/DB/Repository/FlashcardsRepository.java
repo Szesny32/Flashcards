@@ -43,6 +43,23 @@ public class FlashcardsRepository {
         return true;
     }
 
+    public boolean update(Flashcard flashcard) {
+        Category category = categoryRepository.findByName(flashcard.getCategoryName()).orElseThrow(() ->
+                new RuntimeException("Failed to retrieve the newly inserted category"));
+
+        String sql = "UPDATE FLASHCARD " +
+                "SET fc_cat_id = :category_id, fc_question = :question, fc_answer = :answer " +
+                "WHERE fc_id = :id";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("category_id", category.getId())
+                .addValue("question", flashcard.getQuestion())
+                .addValue("answer", flashcard.getAnswer())
+                .addValue("id", flashcard.getId());
+        paramTemplate.update(sql, namedParameters);
+        System.out.println("UPDATED FLASHCARD: "+flashcard.getId());
+        return true;
+    }
+
     public boolean deleteById(int id) {
         String sql = "DELETE FROM FLASHCARD WHERE FC_ID = :fc_id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("fc_id", id);
