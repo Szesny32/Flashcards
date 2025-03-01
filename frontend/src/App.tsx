@@ -1,5 +1,12 @@
+
+
+import FlashCard from './Flashcard'
+
 export default function App(){
+
   return (
-    <>Hello World</>
+    <div>
+      <FlashCard/>
+    </div>
   );
 }
