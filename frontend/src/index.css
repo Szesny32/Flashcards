@@ -1,35 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Sigmar&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Sigmar&display=swap');
+
+div{
+  font-family: "Oswald", sans-serif;
+}
+
 .flashcard {
-  border: 2px dashed black; 
-  
+  border: 2px dashed #dfd3c3; 
   width: 300px;
-  height: 185px; 
+  height: fit-content;
   padding: 20px;
   border-radius: 10px;
-  background-color: lightblue; 
+  background-color: #f0ece2;
+  line-height: 20px;
+  font-size: 16px;
+  color: #596e79; 
   
 }
 
+.flashcard.flashcard-back {
+  border: 2px dashed #c7b198; 
+  background-color: #f0ece2; 
+  color: #596e79; 
+}
+
+.flashcard-container{
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  margin-top: 200px;
+}
+
+
 .flashcard-question{
   height: 60px;
-  line-height: 20px;
-  font-size: 16px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   margin-bottom: 10px;
 }
 
 .flashcard-answer{
-  height: 60px;
-  line-height: 20px;
-  font-size: 16px;
-
-  margin-bottom: 10px;
+  height: 60px; 
+  margin-bottom: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .flashcard-button-container{
   height: 46px;
-
-  margin-bottom: 20px;
-
   display: flex;
   justify-content: space-evenly;
 }
@@ -39,4 +57,103 @@
   width: 75px;
   margin-bottom: 20px;
 
+}
+
+.flashcard-button button {
+  background-color: #c7b298;
+  color: white; 
+  padding: 10px;
+  font-size: 16px;
+  border: none; 
+  border-radius: 8px; 
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.flashcard-button button:hover {
+  background-color: #c59076; 
+  transform: scale(1.05); 
+}
+
+.flashcard-button button:active {
+  background-color: #b6a187; 
+  transform: scale(0.98); 
+}
+
+
+.menu-container{
+  display: flex;
+  justify-content: center; 
+  width: 100%;
+  margin-bottom: 10px;
+  background-color: #f0ece2;
+}
+
+.menu-option {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  width: 200px;
+  height: 50px;
+  background-color: #f0ece2;
+  text-align: center;
+  line-height: 40px;
+  font-size: 20px;
+  color: #855d2b; 
+  font-weight: semi;
+
+  text-decoration: none;
+}
+
+
+.menu-option:hover{
+  color: #f0ece2;
+  background-color: #c7b298;
+}
+
+
+
+
+.logo-container{
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+
+  padding: 10px;
+  height: 52px;
+}
+
+.logo-text{
+  font-family: "Oswald", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 52px;
+  font-size: 52px;
+  
+  color: #596e79; 
+
+  margin-left: 10px;
+}
+
+
+.logo-container button{
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+
+  padding: 10px;
+  height: 52px;
+ 
+  background: inherit;
+  border: none;
+}
+
+.logo-container img{
+  height: 52px;
+  width: 52px;
+}
+
+
+.logo-text:hover{
+  color: #855d2b; 
 }
