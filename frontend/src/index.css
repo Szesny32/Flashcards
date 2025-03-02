@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Sigmar&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Sigmar&display=swap');
+@import './Flashcard/FlashcardList.css';
 
 div{
   font-family: "Oswald", sans-serif;

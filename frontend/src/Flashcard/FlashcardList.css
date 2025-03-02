@@ -1,0 +1,66 @@
+
+table{
+    font-family: "Oswald", sans-serif;
+    width: 100%;
+
+}
+
+.flashcard-list{
+    background: #f0ece2;
+
+}
+
+.flashcard-list-head{
+    width: 100px;
+    background: #855d2b; 
+    color: white;
+    height: 32px;
+    line-height:18px;
+    font-size:18px;
+    font-weight: 300;
+
+}
+
+.flashcard-list-row{
+    width: 100px;
+    background: #f0ece2;
+    text-align: center;
+    height: 40px;
+    font-weight: 300;
+    font-size:16px;
+}
+
+
+.flashcard-list-buttons-container{
+    height: 40px;
+    display: flex;
+    align-items: center; 
+    justify-content: space-evenly;
+}
+
+.flashcard-list-button{
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: none;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+
+}
+
+.flashcard-list-button-img{
+    width: 16px;
+    width: 16px;
+
+}
+
+
+.flashcard-list-button-img:hover {
+
+    transform: scale(1.15); 
+  }
+
+  
+  
+
