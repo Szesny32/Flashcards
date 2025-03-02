@@ -61,11 +61,12 @@ public class FlashcardsRepository {
     }
 
     public boolean deleteById(int id) {
+
         String sql = "DELETE FROM FLASHCARD WHERE FC_ID = :fc_id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("fc_id", id);
-        paramTemplate.update(sql, namedParameters);
-        System.out.println("DELETED FLASHCARD ID: " + id);
-        return true;
+        int status = paramTemplate.update(sql, namedParameters);
+        System.out.println("FLASHCARD ID: " + id + " DELETING STATUS: "+status);
+        return status==1;
     }
 
     public Optional<Flashcard> getRandomFlashcard() {

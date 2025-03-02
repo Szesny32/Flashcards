@@ -37,10 +37,8 @@ public class FlashcardAPI {
     }
 
     @GetMapping("/api/deleteFlashcard/{id}")
-    public RedirectView deleteById(@PathVariable int id, HttpServletRequest request) {
-        flashcardsRepository.deleteById(id);
-        String referer = request.getHeader("Referer");
-        return new RedirectView(referer != null ? referer : "/");
+    public boolean deleteById(@PathVariable int id) {
+        return flashcardsRepository.deleteById(id);
     }
 
 }
